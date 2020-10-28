@@ -1,0 +1,66 @@
+@import "./resets";
+@import "./variables";
+@mixin flexCenter($direction) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) {
+  @if $light-theme {
+    background: lighten($primary-color, 100%);
+    color: darken($text-color, 100%);
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
+
+@function weight($weight-name) {
+  @return map-get($font-weigths, $weight-name)
+    //? function weight that return map-get($font-weights, $weight-name)
+;
+}
+body {
+  background: $primary-color;
+  color: $text-color;
+  //? instead of calling var(--variable) we putting $primary-color
+  font-weight: weight(bold);
+
+  //? map-get($font-weights, bold) taking font-weight from variable
+}
+
+.main {
+  @include flexCenter(row);
+  width: 80% - 40%; // ? you can calculate things but it wont work with diffrent types
+  margin: 0 auto;
+
+  #{&}__paragraph1 {
+    //? instead of typing main__paragraph we can use & = parents = .
+    font-weight: weight(regular);
+
+    &:hover {
+      color: pink;
+    }
+  }
+
+  #{&}__paragraph2 {
+    @extend .main__paragraph1;
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+  @include mobile {
+    flex-direction: column;
+  }
+}
+.light {
+  @include theme(
+    $light-theme: false
+  ); //? if its true it's add css parameters to the site, and if it's false it wont add anything
+}
